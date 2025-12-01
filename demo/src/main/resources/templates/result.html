@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Resultados del Diagnóstico</title>
+</head>
+<body>
+    <h1>Resultados del Diagnóstico</h1>
+
+    <h2>Síntomas Reportados:</h2>
+    <ul>
+        <li th:each="s : ${selectedSymptoms}" th:text="${s.name}"></li>
+    </ul>
+
+    <hr/>
+
+    <h2>1. Probabilidad de Diagnóstico (Causa Raíz)</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Diagnóstico</th>
+                <th>Probabilidad</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="entry : ${posteriors}">
+                <td th:text="${entry.key.name}"></td>
+                <td th:text="${#numbers.formatPercent(entry.value, 1, 2)}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>2. Utilidad Esperada (Análisis Costo-Beneficio)</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Acción</th>
+                <th>Utilidad Esperada</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="entry : ${utilities}">
+                <td th:text="${entry.key.name}"></td>
+                <td th:text="${#numbers.formatDecimal(entry.value, 1, 2)}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr/>
+
+    <h2 style="color: green;">>>> ACCIÓN ÓPTIMA RECOMENDADA: <span th:text="${bestAction.name}"></span></h2>
+
+    <hr/>
+
+    <h3>Análisis de Sensibilidad</h3>
+    <div th:if="${#lists.isEmpty(sensitivity)}">
+        <p>La decisión es robusta. Pequeños cambios en los costos no afectan la recomendación.</p>
+    </div>
+    <div th:if="${!#lists.isEmpty(sensitivity)}">
+        <p style="color: orange;">Advertencia: La decisión podría cambiar bajo las siguientes condiciones:</p>
+        <ul>
+            <li th:each="msg : ${sensitivity}" th:text="${msg}"></li>
+        </ul>
+    </div>
+
+    <br/>
+    <a href="/">Volver al inicio</a>
+
+</body>
+</html>

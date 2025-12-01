@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema Experto - Diagnóstico</title>
+</head>
+<body>
+    <h1>Sistema Experto de Diagnóstico de Hardware</h1>
+    <p>Seleccione los síntomas que presenta el equipo:</p>
+
+    <div th:if="${error}" style="color: red;">
+        <p th:text="${error}"></p>
+    </div>
+
+    <form action="/diagnose" method="post">
+        
+        <div th:each="entry : ${symptomsByCategory}">
+            <h3 th:text="${entry.key}">Categoría</h3>
+            <div style="margin-left: 20px;">
+                <div th:each="symptom : ${entry.value}">
+                    <input type="checkbox" 
+                           th:id="${'symptom_' + symptom.id}" 
+                           name="selectedSymptoms" 
+                           th:value="${symptom.id}" />
+                    <label th:for="${'symptom_' + symptom.id}" th:text="${symptom.name}"></label>
+                    <br/>
+                </div>
+            </div>
+            <hr/>
+        </div>
+
+        <br/>
+        <button type="submit">Diagnosticar</button>
+    </form>
+</body>
+</html>
