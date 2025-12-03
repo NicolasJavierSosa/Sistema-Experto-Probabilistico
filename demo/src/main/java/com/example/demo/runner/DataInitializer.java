@@ -31,7 +31,9 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Limpiar base de datos para recargar datos realistas
+        if (failureCauseRepository.count() > 0) {
+            return; // Ya hay datos
+        }
         actionOutcomeRepository.deleteAll();
         causalRelationRepository.deleteAll();
         symptomRepository.deleteAll();
